@@ -20,9 +20,21 @@ path_file.close()   #Закрыли файл
 types_file.close()  #Закрыли файл
 
 #не забыть pip install openpyxl
-datajournal = pandas.read_excel(journalname, sheet_name='log', engine="openpyxl",usecols=['Date','Time','Filename','Status'])
+datajournal = pandas.read_excel(journalname, sheet_name='log', engine="openpyxl",usecols=['Date','Time','Filename','Size','Status'])
 
+def filesize_name(size):
+    res = ''
+    if size < 1024:
+        res += str(size) + ' B'
+    elif 1024 <= size < 1024**2:
+        res += str(size//1024) + ' KB'
+    elif 1024**2 <= size < 1024**3:
+        res += str(size//1024**2) + ' MB'
+    elif 1024**3 <= size < 1024**4:
+        res += str(size//1024**3) + ' GB'
+    return res
 #Класс для слежки за файлами. Нужно только create
+
 class MyHandler(FileSystemEventHandler):
     def on_created(self, event):
 
@@ -35,7 +47,8 @@ class MyHandler(FileSystemEventHandler):
 
                     bdate = str(datetime.datetime.today())[:10:]
                     btime = str(datetime.datetime.today())[11:19:]
-                    datajournal.loc[len(datajournal.index)] = [bdate,btime,str(event.src_path),'Выполнен']
+                    bsize = os.path.getsize(event.src_path)
+                    datajournal.loc[len(datajournal.index)] = [bdate,btime,str(event.src_path),filesize_name(bsize),'Выполнен']
                     writer = pandas.ExcelWriter(journalname)
                     datajournal.to_excel(writer,'log')
                     writer.save()
