@@ -7,11 +7,11 @@ WatchDog, openpyxl, pandas libraries are required
     pip install watchdog openpyxl pandas
 ```
 ## Describe
-source_path.txt (in the same folder with "censor_file_type.py")
+source_path.txt (in the same folder with "backup_journal.py")
 
     List of directories. Don't intersect directories
 
-file_types.txt (in the same folder with "censor_file_type.py")
+file_types.txt (in the same folder with "backup_journal.py")
     
     List of filetypes, that logging
     
